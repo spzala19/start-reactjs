@@ -1,0 +1,16 @@
+{
+  "linux": {
+    "commands": {
+      "npm init -y": "initalizing npm project",
+      "npm install react react-dom": "installing react and react-dom",
+      "npm install prettier": "adding code formatter(prettier) to increase code readability",
+      "npm install -D eslint eslint-config-prettier": "installing eslint for uniform coding style amoung team members",
+      "npm install eslint-plugin-import@latest --save-dev": "adding eslint plugin - imports",
+      "npm install eslint-plugin-react@latest --save-dev": "adding eslint plugin -  react",
+      "npm install eslint-plugin-jsx-a11y@latest --save-dev": "adding eslint plugin - jsx",
+      "npm install -D eslint-config-airbnb": "adding eslint plugin - airbnb ",
+      "npm install eslint-plugin-react-hooks@latest --save-dev": "adding eslint plugin - react hooks",
+      "npm install -D parcel-bundler": "installing parcel web bundler"
+    }
+  }
+}
