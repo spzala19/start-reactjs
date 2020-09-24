@@ -415,8 +415,11 @@ class widgets:
         self.showLogsArea.configure(state='normal')
         # Inserting Text which is read only
         self.showLogsArea.update()
+        last_char_visible= self.showLogsArea.bbox("end-1c")
         self.showLogsArea.insert(tk.INSERT, log)
-        self.showLogsArea.see("end")
+        self.showLogsArea.update()
+        if last_char_visible:
+            self.showLogsArea.see("end")
         self.showLogsArea.configure(state='disabled')
 
     def runCommands(self, command,
@@ -451,7 +454,7 @@ class widgets:
             #self.cleanDir()
             self.createFirstWindow()
         self.p.step(99 // len(self.commandList))
-        self.printLogs(result + '\n \n')
+        self.printLogs(result + '\n')
         self.counter += 1
         if self.counter >= len(self.commandList):
             self.generateFiles()
@@ -532,6 +535,7 @@ class widgets:
         jsonFile.close()
         self.statusLabel['text'] = "installation finished!"
         self.printLogs("\nHappy Coding \n")
+        self.taskDone = True
         self.contentFrame2.after(4000, self.createThirdWindow)
 
     def createThirdWindow(self):
@@ -546,7 +550,6 @@ class widgets:
         self.showInfo()
 
     def showInfo(self):
-        self.taskDone = True
         # ================================= creation and placements of decorative images ========================== #
         self.tickImage = Canvas(self.contentFrame3,
                                 width=40,
@@ -662,7 +665,8 @@ class widgets:
     def close(self):
         if messagebox.askyesno("Are you sure?",
                                "Do you really want to exit this application?"):
-            if self.taskDone:
+            #print(self.taskDone)
+            if not self.taskDone:
                 self.cleanDir()
             self.window.destroy()
 
