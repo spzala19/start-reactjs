@@ -10,6 +10,9 @@ from tkinter.ttk import Progressbar
 import threading
 import json
 import os
+import re
+from subprocess import CalledProcessError
+import signal
 
 
 class content:
@@ -127,6 +130,7 @@ class widgets:
         # Set window background
         self.window.configure(bg='#262625')
         #create frames
+        self.taskDone = False
         self.headerFrame = Frame(self.window, background="#262625")
         self.headerFrame.grid(row=0, column=0, sticky="NSEW", pady=10)
         self.footerFrame = Frame(self.window)
@@ -205,8 +209,12 @@ class widgets:
         self.e3 = tk.Entry(self.contentFrame1,
                            background="#343634",
                            fg="#c7c9c7",
+                           disabledbackground="#343634",
+                           disabledforeground="#c7c9c7",
                            borderwidth=0)
         self.e3.grid(row=2, column=1, columnspan=2, padx=8)
+        self.e3.insert(0, "1.0.0")
+        self.e3.configure(state='disabled')
         #textarea for input
         self.textarea = st.ScrolledText(self.contentFrame1,
                                         width=18,
@@ -288,13 +296,29 @@ class widgets:
 
     def processData(self):  #handling of form data once submitted
         #storing form data
-        self.dirPath = self.e1.get()
-        self.name = self.e2.get()
-        self.version = self.e3.get()
-        self.description = self.textarea.get("1.0", tk.END)
-        os.system(f"mkdir {self.dirPath}/{self.name}")
-        self.createSecondWindow()  #!important creation of second window
-        #self.createThirdWindow()
+        print(re.search("[A-Za-z]", self.e2.get()))
+        print(self.textarea.get("1.0", tk.END))
+        if self.e1.get() == ' -- nothing selected --':
+            self.messageWidget(
+                "Please select project directory.\nThis field can't be empty! ",
+                "warning")
+        elif re.search("[A-Za-z]", self.e2.get()) == None:
+            self.messageWidget(
+                "Empty Or Invalid value in Name field! Also this field requires at least one alphabet",
+                "warning")
+        elif re.search("[A-Za-z]", self.textarea.get("1.0", tk.END)) == None:
+            self.messageWidget(
+                "Empty Or Invalid value in Description field! Also this field requires at least one alphabet",
+                "warning")
+        else:
+            self.dirPath = self.e1.get()
+            self.name = self.e2.get()
+            self.version = self.e3.get()
+            self.description = self.textarea.get("1.0", tk.END)
+            os.system(f"mkdir {self.dirPath}/{self.name}")
+            self.createSecondWindow()  #!important creation of second window
+            #self.createThirdWindow()
+
     # ===================================== ++++++++++++++++++++++++++ =================================== #
     # ============================================  Second window ======================================== #
     # ===================================== ++++++++++++++++++++++++++ =================================== #
@@ -333,6 +357,7 @@ class widgets:
                 "Are you sure?",
                 "Do you really wants to cancel installation process?"):
             self.contentFrame2.destroy()
+            self.cleanDir()
             self.createFirstWindow()
         else:
             pass
@@ -400,16 +425,37 @@ class widgets:
         self.printLogs(
             " > " + command + '\n' +
             '----------------------------------------------\n', commandDesc)
-        print(command)
-        result = subprocess.getoutput(
+        #print(command)
+
+        #check for the node version
+        if command == "node -v":
+            result = subprocess.getoutput(f"node -v")
+            result = re.search("v(\d+\.)", result).group()
+            result = result[1:len(result) - 1]
+            print(result)
+            if int(result) < 10:
+                self.messageWidget(
+                    "Node version 10 or above not detected! first install node with version 10 or above",
+                    "error")
+                self.contentFrame2.destroy()
+                os.killpg(os.getpgid(result.pid), signal.SIGTERM)
+                self.cleanDir()
+                self.createFirstWindow()
+
+        status, result = subprocess.getstatusoutput(
             f"cd {self.dirPath}/{self.name}; {command}")
+        if status != 0:
+            self.messageWidget(f"Exit status : {status} \n{result}", "error")
+            self.cleanDir()
+            self.contentFrame2.destroy()
+            #self.cleanDir()
+            self.createFirstWindow()
         self.p.step(99 // len(self.commandList))
         self.printLogs(result + '\n \n')
         self.counter += 1
         if self.counter >= len(self.commandList):
             self.generateFiles()
         self.lock.release()
-       
 
     def fetchCommands(self):  #fetch commands from commands.json
         #multithreading synchronization lock
@@ -421,9 +467,10 @@ class widgets:
         self.commandList = commandJsonObject["linux"]['commands']
         self.counter = 0
         for cmd in self.commandList:
-            threading.Thread(target=self.runCommands,
-                             args=(cmd, self.commandList[cmd])).start()
-            #t1.start()
+            t1 = threading.Thread(target=self.runCommands,
+                                  args=(cmd, self.commandList[cmd]))
+            t1.daemon = True
+            t1.start()
             #self.contentFrame2.after(200, self.runCommands(cmd))
 
     #message widget
@@ -437,7 +484,7 @@ class widgets:
 
     def generateFiles(self):
         dirPath, name, version, description = self.dirPath, self.name, self.version, self.description
-        dirPath = f"{dirPath}/{name}"
+        projectDir = f"{dirPath}/{name}"
         #======================= generating files with content========================================
         filedict = {
             '.gitignore': content.git,
@@ -447,20 +494,20 @@ class widgets:
             'src/App.js': content.appJs,
             'src/style.css': content.styleCss
         }
-        os.system(f"mkdir {dirPath}/src")
+        os.system(f"mkdir {projectDir}/src")
         for fil in filedict:
             print(fil)
-            with open(f"{dirPath}/{fil}", '+w') as rw:
+            with open(f"{projectDir}/{fil}", '+w') as rw:
                 rw.write(filedict[fil])
 
         #==================== updating package file =========
 
         #=== package.json
-        jsonFile = open(f"{dirPath}/package.json", "r")
+        jsonFile = open(f"{projectDir}/package.json", "r")
         json_object = json.load(jsonFile)
         jsonFile.close()
 
-        jsonFile = open(f"{dirPath}/package.json", "w")
+        jsonFile = open(f"{projectDir}/package.json", "w")
         json_object['name'] = name
         json_object['version'] = version
         json_object['description'] = description
@@ -473,11 +520,11 @@ class widgets:
         jsonFile.close()
 
         #===== package-lock.json
-        jsonFile = open(f"{dirPath}/package-lock.json", "r")
+        jsonFile = open(f"{projectDir}/package-lock.json", "r")
         json_object = json.load(jsonFile)
         jsonFile.close()
 
-        jsonFile = open(f"{dirPath}/package-lock.json", "w")
+        jsonFile = open(f"{projectDir}/package-lock.json", "w")
         json_object['name'] = name
         json_object['version'] = version
 
@@ -485,8 +532,8 @@ class widgets:
         jsonFile.close()
         self.statusLabel['text'] = "installation finished!"
         self.printLogs("\nHappy Coding \n")
-        self.contentFrame2.after(4000,self.createThirdWindow)
-    
+        self.contentFrame2.after(4000, self.createThirdWindow)
+
     def createThirdWindow(self):
         self.contentFrame2.destroy()
         self.contentFrame3 = Frame(self.window,
@@ -497,24 +544,27 @@ class widgets:
                                    borderwidth=0)
         self.contentFrame3.grid(row=1, column=0, sticky="NS", pady=10, padx=0)
         self.showInfo()
+
     def showInfo(self):
+        self.taskDone = True
         # ================================= creation and placements of decorative images ========================== #
         self.tickImage = Canvas(self.contentFrame3,
-                                   width=40,
-                                   height=40,
-                                   background="#262625",
-                                   bd=0,
-                                   highlightthickness=0)
-        self.tickImage.grid(row=0, column=0,sticky=tk.W,padx=14)
+                                width=40,
+                                height=40,
+                                background="#262625",
+                                bd=0,
+                                highlightthickness=0)
+        self.tickImage.grid(row=0, column=0, sticky=tk.W, padx=14)
         self.img3 = ImageTk.PhotoImage(Image.open("images/tick.png"))
         self.tickImage.create_image(20, 20, image=self.img3)
         Label(self.contentFrame3,
               text="React Project has been created successfully",
-              background="#262625",font=("",12)).grid(row=0,
-                                         column=0,
-                                         sticky=tk.W + tk.N,
-                                         padx=50,
-                                         pady=13)
+              background="#262625",
+              font=("", 12)).grid(row=0,
+                                  column=0,
+                                  sticky=tk.W + tk.N,
+                                  padx=50,
+                                  pady=13)
         # Label(self.contentFrame3,
         #       text="Instructions :",
         #       background="#262625",font=("",11)).grid(row=1,
@@ -524,62 +574,109 @@ class widgets:
         #                                  )
         Label(self.contentFrame3,
               text="npm run format",
-              background="#1a1919",foreground="#68D9B5",width=72,font=("Times New Roman", 12)).grid(row=2,
-                                         column=0,
-                                         sticky=tk.W,
-                                         padx=20,
-                                         pady=7)
-        Label(self.contentFrame3,
-              text="> Run this command to format whole project's source code. You can always change this format settings in '.prettierrc.json' file ",
-              background="#262625",font=("", 10),wraplength=616, justify="left").grid(row=3,
-                                         column=0,
-                                         sticky=tk.W + tk.N,
-                                         padx=20,
-                                         )   
+              background="#1a1919",
+              foreground="#68D9B5",
+              width=72,
+              font=("Times New Roman", 12)).grid(row=2,
+                                                 column=0,
+                                                 sticky=tk.W,
+                                                 padx=20,
+                                                 pady=7)
+        Label(
+            self.contentFrame3,
+            text=
+            "> Run this command to format whole project's source code. You can always change this format settings in '.prettierrc.json' file ",
+            background="#262625",
+            font=("", 10),
+            wraplength=616,
+            justify="left").grid(
+                row=3,
+                column=0,
+                sticky=tk.W + tk.N,
+                padx=20,
+            )
         Label(self.contentFrame3,
               text="npm run -- --fix lint",
-              background="#1a1919",foreground="#68D9B5",width=72,font=("Times New Roman", 12)).grid(row=4,
-                                         column=0,
-                                         sticky=tk.W,
-                                         padx=20,pady=7)
-        Label(self.contentFrame3,
-              text="> Run this command to fix all auto-fixable errors. You can always change lint settings in '.eslintrc.json' file",
-              background="#262625",font=("", 10),wraplength=616, justify="left").grid(row=5,
-                                         column=0,
-                                         sticky=tk.W + tk.N,
-                                         padx=20,
-                                         )   
+              background="#1a1919",
+              foreground="#68D9B5",
+              width=72,
+              font=("Times New Roman", 12)).grid(row=4,
+                                                 column=0,
+                                                 sticky=tk.W,
+                                                 padx=20,
+                                                 pady=7)
+        Label(
+            self.contentFrame3,
+            text=
+            "> Run this command to fix all auto-fixable errors. You can always change lint settings in '.eslintrc.json' file",
+            background="#262625",
+            font=("", 10),
+            wraplength=616,
+            justify="left").grid(
+                row=5,
+                column=0,
+                sticky=tk.W + tk.N,
+                padx=20,
+            )
 
         Label(self.contentFrame3,
               text="npm run dev",
-              background="#1a1919",foreground="#68D9B5",width=72,font=("Times New Roman", 12)).grid(row=6,
-                                         column=0,
-                                         sticky=tk.W,
-                                         padx=20,
-                                         pady=7)
-        Label(self.contentFrame3,
-              text="> Run this command to start development server with babel. Parcel web bundler is pre-configured.",
-              background="#262625",font=("", 10),wraplength=616, justify="left").grid(row=7,
-                                         column=0,
-                                         sticky=tk.W + tk.N,
-                                         padx=20,
-                                         )
+              background="#1a1919",
+              foreground="#68D9B5",
+              width=72,
+              font=("Times New Roman", 12)).grid(row=6,
+                                                 column=0,
+                                                 sticky=tk.W,
+                                                 padx=20,
+                                                 pady=7)
+        Label(
+            self.contentFrame3,
+            text=
+            "> Run this command to start development server with babel. Parcel web bundler is pre-configured.",
+            background="#262625",
+            font=("", 10),
+            wraplength=616,
+            justify="left").grid(
+                row=7,
+                column=0,
+                sticky=tk.W + tk.N,
+                padx=20,
+            )
 
         #cancle button to terminate process
         self.QuitBtn = tk.Button(self.contentFrame3,
-                                   borderwidth=0,
-                                   text="Quit",
-                                   highlightthickness=0,
-                                   background="#bf1d1d",
-                                   activebackground="#2b2b2a",
-                                   cursor="hand1",
-                                   foreground="white",
-                                   command=lambda:self.window.destroy()).grid(row=10,
-                                                                 column=0,
-                                                                 sticky=tk.W,
-                                                                 pady=17,
-                                                                 padx=280)
+                                 borderwidth=0,
+                                 text="Quit",
+                                 highlightthickness=0,
+                                 background="#bf1d1d",
+                                 activebackground="#2b2b2a",
+                                 cursor="hand1",
+                                 foreground="white",
+                                 command=lambda: self.window.destroy()).grid(
+                                     row=10,
+                                     column=0,
+                                     sticky=tk.W,
+                                     pady=17,
+                                     padx=280)
+
+    def close(self):
+        if messagebox.askyesno("Are you sure?",
+                               "Do you really want to exit this application?"):
+            if self.taskDone:
+                self.cleanDir()
+            self.window.destroy()
+
+    def cleanDir(self):
+        try:
+            #print("cleaning")
+            os.system(f"rm -r {self.dirPath}/{self.name}")
+            #print("cleaned")
+        except:
+            pass
+
+
 if __name__ == "__main__":
     window = tk.Tk()
     wg = widgets(window)
+    window.protocol('WM_DELETE_WINDOW', wg.close)
     window.mainloop()
