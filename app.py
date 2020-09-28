@@ -456,7 +456,7 @@ class widgets:
                 self.createFirstWindow()
 
         status, result = subprocess.getstatusoutput(
-            f"cd {self.dirPath}/{self.name}; {command}")
+            f"cd {self.path}&&{command}")
         if status != 0:
             self.messageWidget(f"Exit status : {status} \n{result}", "error")
             self.cleanDir()
