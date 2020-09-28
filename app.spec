@@ -26,7 +26,8 @@ exe = EXE(pyz,
           bootloader_ignore_signals=False,
           strip=False,
           upx=True,
-          console=False )
+          console=False,
+          icon='/home/sp/Work/frontend/setup_automation/images/logo.ico' )
 coll = COLLECT(exe,
                a.binaries,
                a.zipfiles,

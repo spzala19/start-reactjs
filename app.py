@@ -129,6 +129,10 @@ class widgets:
         self.window.resizable(False, False)
         # Set window background
         self.window.configure(bg='#262625')
+        # choose application icon
+        p1 = PhotoImage(file = 'images/logo.png') 
+        # Setting icon of master window 
+        self.window.iconphoto(False, p1) 
         #create frames
         self.taskDone = False
         self.headerFrame = Frame(self.window, background="#262625")
@@ -144,9 +148,9 @@ class widgets:
                                  background="#262625",
                                  bd=0,
                                  highlightthickness=0)
-        self.titleIamge.grid(row=0, column=0, padx=55)
+        self.titleIamge.grid(row=0, column=0, padx=60)
         self.img = ImageTk.PhotoImage(Image.open("images/titleIcon.png"))
-        self.titleIamge.create_image(240, 80, image=self.img)
+        self.titleIamge.create_image(285, 80, image=self.img)
 
     def createFirstWindow(self):  # creates first window
         self.contentFrame1 = Frame(self.window,
@@ -166,28 +170,28 @@ class widgets:
         # ================================= creation and placement of form labels ========================== #
         Label(self.contentFrame1,
               text="Select Project Directory",
-              background="#262625").grid(row=0,
+              background="#262625",foreground="#c7c9c7",font=("", 10)).grid(row=0,
                                          column=0,
                                          sticky=tk.W + tk.N,
                                          padx=20,
                                          pady=23)
         Label(self.contentFrame1,
               text="Enter Project Name",
-              background="#262625").grid(row=1,
+              background="#262625",foreground="#c7c9c7",font=("", 10)).grid(row=1,
                                          column=0,
                                          sticky=tk.W,
                                          padx=20,
                                          pady=10)
         Label(self.contentFrame1,
               text="Enter Project Version",
-              background="#262625").grid(row=2,
+              background="#262625",foreground="#c7c9c7",font=("", 10)).grid(row=2,
                                          column=0,
                                          sticky=tk.W,
                                          padx=20,
                                          pady=10)
         Label(self.contentFrame1,
               text="Enter Project Description",
-              background="#262625").grid(row=3,
+              background="#262625",foreground="#c7c9c7",font=("", 10)).grid(row=3,
                                          column=0,
                                          sticky=tk.W + tk.N,
                                          padx=20,
@@ -204,14 +208,14 @@ class widgets:
         self.e2 = tk.Entry(self.contentFrame1,
                            background="#343634",
                            fg="#c7c9c7",
-                           borderwidth=0)
+                           borderwidth=0,font=("Times New Roman", 12))
         self.e2.grid(row=1, column=1, columnspan=2, padx=8)
         self.e3 = tk.Entry(self.contentFrame1,
                            background="#343634",
                            fg="#c7c9c7",
                            disabledbackground="#343634",
                            disabledforeground="#c7c9c7",
-                           borderwidth=0)
+                           borderwidth=0,font=("Times New Roman", 12))
         self.e3.grid(row=2, column=1, columnspan=2, padx=8)
         self.e3.insert(0, "1.0.0")
         self.e3.configure(state='disabled')
@@ -268,6 +272,7 @@ class widgets:
                                    foreground="white",
                                    activebackground="#2b2b2a",
                                    cursor="hand1",
+                                   font=("", 12),
                                    command=self.processData).grid(row=5,
                                                                   column=1,
                                                                   sticky=tk.W +
@@ -315,7 +320,9 @@ class widgets:
             self.name = self.e2.get()
             self.version = self.e3.get()
             self.description = self.textarea.get("1.0", tk.END)
-            os.system(f"mkdir {self.dirPath}/{self.name}")
+            self.path = os.path.join(self.dirPath,self.name)
+            os.mkdir(self.path)
+            #os.system(f"mkdir {self.dirPath}/{self.name}")
             self.createSecondWindow()  #!important creation of second window
             #self.createThirdWindow()
 
@@ -345,6 +352,7 @@ class widgets:
                                    activebackground="#2b2b2a",
                                    cursor="hand1",
                                    foreground="white",
+                                   font=("", 12),
                                    command=self.cancelTask).grid(row=3,
                                                                  column=0,
                                                                  sticky=tk.W,
@@ -374,7 +382,9 @@ class widgets:
         #status label for progressbar
         self.statusLabel = Label(self.contentFrame2,
                                  text="initializing commands..",
-                                 background="#262625")
+                                 background="#262625",
+                                 foreground = "#c7c9c7",
+                                 font=("", 10))
         self.statusLabel.grid(row=0, column=0, sticky="NW", padx=55, pady=15)
 
         #loader gif
@@ -487,7 +497,7 @@ class widgets:
 
     def generateFiles(self):
         dirPath, name, version, description = self.dirPath, self.name, self.version, self.description
-        projectDir = f"{dirPath}/{name}"
+        projectDir = self.path
         #======================= generating files with content========================================
         filedict = {
             '.gitignore': content.git,
@@ -497,7 +507,8 @@ class widgets:
             'src/App.js': content.appJs,
             'src/style.css': content.styleCss
         }
-        os.system(f"mkdir {projectDir}/src")
+        os.mkdir(os.path.join(projectDir,'src'))
+        #os.system(f"mkdir {projectDir}/src")
         for fil in filedict:
             print(fil)
             with open(f"{projectDir}/{fil}", '+w') as rw:
@@ -563,6 +574,7 @@ class widgets:
         Label(self.contentFrame3,
               text="React Project has been created successfully",
               background="#262625",
+              foreground = "#c7c9c7",
               font=("", 12)).grid(row=0,
                                   column=0,
                                   sticky=tk.W + tk.N,
@@ -590,6 +602,7 @@ class widgets:
             text=
             "> Run this command to format whole project's source code. You can always change this format settings in '.prettierrc.json' file ",
             background="#262625",
+            foreground = "#c7c9c7",
             font=("", 10),
             wraplength=616,
             justify="left").grid(
@@ -613,6 +626,7 @@ class widgets:
             text=
             "> Run this command to fix all auto-fixable errors. You can always change lint settings in '.eslintrc.json' file",
             background="#262625",
+            foreground = "#c7c9c7",
             font=("", 10),
             wraplength=616,
             justify="left").grid(
@@ -637,6 +651,7 @@ class widgets:
             text=
             "> Run this command to start development server with babel. Parcel web bundler is pre-configured.",
             background="#262625",
+            foreground = "#c7c9c7",
             font=("", 10),
             wraplength=616,
             justify="left").grid(
@@ -649,11 +664,12 @@ class widgets:
         #cancle button to terminate process
         self.QuitBtn = tk.Button(self.contentFrame3,
                                  borderwidth=0,
-                                 text="Quit",
+                                 text="Finish",
                                  highlightthickness=0,
                                  background="#bf1d1d",
                                  activebackground="#2b2b2a",
                                  cursor="hand1",
+                                 font=("", 12),
                                  foreground="white",
                                  command=lambda: self.window.destroy()).grid(
                                      row=10,
