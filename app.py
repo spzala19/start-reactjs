@@ -16,6 +16,10 @@ import signal
 
 
 class content:
+    # for linux deployment
+    #absolutePath = '/usr/share/start-reactjs/'  
+    # for developement
+    absolutePath = ''  
     messages = [
         [
             "Project Name will be used as a project's name (ie. 'my_app') and will be added to package.json",
@@ -130,7 +134,7 @@ class widgets:
         # Set window background
         self.window.configure(bg='#262625')
         # choose application icon
-        p1 = PhotoImage(file = 'images/logo.png') 
+        p1 = PhotoImage(file = f'{content.absolutePath}images/logo.png') 
         # Setting icon of master window 
         self.window.iconphoto(False, p1) 
         #create frames
@@ -149,7 +153,7 @@ class widgets:
                                  bd=0,
                                  highlightthickness=0)
         self.titleIamge.grid(row=0, column=0, padx=60)
-        self.img = ImageTk.PhotoImage(Image.open("images/titleIcon.png"))
+        self.img = ImageTk.PhotoImage(Image.open(f"{content.absolutePath}images/titleIcon.png"))
         self.titleIamge.create_image(285, 80, image=self.img)
 
     def createFirstWindow(self):  # creates first window
@@ -233,7 +237,7 @@ class widgets:
         # ================================= creation and placements of action buttons ========================== #
 
         #for choose button
-        self.folderimg = PhotoImage(file="images/folderIcon.png")
+        self.folderimg = PhotoImage(file=f"{content.absolutePath}images/folderIcon.png")
         self.chooseBtn = tk.Button(self.contentFrame1,
                                    background="#262625",
                                    image=self.folderimg,
@@ -247,7 +251,7 @@ class widgets:
                                                                    pady=4)
         #generating information buttons
         messages = content.messages
-        self.infoimg = PhotoImage(file="images/infoIcon.png")
+        self.infoimg = PhotoImage(file=f"{content.absolutePath}images/infoIcon.png")
         for j in range(0, len(messages)):
             self.infoBtn = tk.Button(
                 self.contentFrame1,
@@ -263,7 +267,7 @@ class widgets:
                                                       sticky=tk.W + tk.N,
                                                       pady=10)
         #for submit button
-        self.startimg = PhotoImage(file="images/startIcon.png")
+        self.startimg = PhotoImage(file=f"{content.absolutePath}images/startIcon.png")
         self.submitBtn = tk.Button(self.contentFrame1,
                                    text="Start",
                                    borderwidth=0,
@@ -288,7 +292,7 @@ class widgets:
                                    bd=0,
                                    highlightthickness=0)
         self.graphicImage.grid(row=3, column=3, rowspan=3, padx=60)
-        self.img2 = ImageTk.PhotoImage(Image.open("images/graphics1.png"))
+        self.img2 = ImageTk.PhotoImage(Image.open(f"{content.absolutePath}images/graphics1.png"))
         self.graphicImage.create_image(70, 70, image=self.img2)
 
     #---------------- action functions --------------------------------------------------------------------------------#
@@ -389,7 +393,7 @@ class widgets:
 
         #loader gif
         self.loaderFrames = [
-            PhotoImage(file='images/loader.gif', format='gif -index %i' % (i))
+            PhotoImage(file=f'{content.absolutePath}images/loader.gif', format='gif -index %i' % (i))
             for i in range(24)
         ]
         self.label = Label(self.contentFrame2, background="#262625")
@@ -475,7 +479,7 @@ class widgets:
         self.lock = threading.Lock()
 
         #reading json
-        cmdFile = open("commands.json", "r")
+        cmdFile = open(f"{content.absolutePath}commands.json", "r")
         commandJsonObject = json.load(cmdFile)
         self.commandList = commandJsonObject["linux"]['commands']
         self.counter = 0
@@ -569,7 +573,7 @@ class widgets:
                                 bd=0,
                                 highlightthickness=0)
         self.tickImage.grid(row=0, column=0, sticky=tk.W, padx=14)
-        self.img3 = ImageTk.PhotoImage(Image.open("images/tick.png"))
+        self.img3 = ImageTk.PhotoImage(Image.open(f"{content.absolutePath}images/tick.png"))
         self.tickImage.create_image(20, 20, image=self.img3)
         Label(self.contentFrame3,
               text="React Project has been created successfully",
