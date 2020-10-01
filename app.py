@@ -17,9 +17,9 @@ import signal
 
 class content:  # holds content to generate config files for react
     # for linux deployment
-    #absolutePath = '/usr/share/start-reactjs/'
+    absolutePath = '/usr/share/start-reactjs/'
     # for developement
-    absolutePath = ''
+    #absolutePath = ''
     messages = [
         [
             "Project Name will be used as a project's name (ie. 'my_app') and will be added to package.json",
@@ -89,9 +89,8 @@ class content:  # holds content to generate config files for react
         }
     }
     """
-    #index.html
-    indexHtml = """
-    <html lang="en">
+       #index.html
+    indexHtml = """<html lang="en">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -108,23 +107,15 @@ class content:  # holds content to generate config files for react
     appJs = """
     import React from 'react';
     import ReactDOM from 'react-dom';
-
     const App = () => (
     <div>
-        <center><h1 style="color:lightgreen;">Your ReactJs app is working!</h1>
-        <p>Start coding and build some awsome stuff;)</p></center>
+        <p>Congratulation!! Your ReactJs app is working! Start building awesome stuff!</p>
     </div>
     );
     ReactDOM.render(<App />, document.getElementById('root'));
-
     """
     #style.css
-    styleCss = """
-    body{
-        background-color : #121212;
-        color:white;
-    }
-    """
+    styleCss = ''
 
 
 class widgets:
@@ -613,7 +604,7 @@ class widgets:
                                   column=0,
                                   sticky=tk.W + tk.N,
                                   padx=20,
-                                  pady=10)
+                                  pady=7)
         Label(self.contentFrame3,
               text="npm run format",
               background="#1a1919",
@@ -702,7 +693,7 @@ class widgets:
                                      row=10,
                                      column=0,
                                      sticky=tk.W,
-                                     pady=17,
+                                     pady=15,
                                      padx=280)
 
     def close(self):  #warning
