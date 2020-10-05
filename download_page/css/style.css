@@ -1,0 +1,55 @@
+body {
+  background-color: #0c3058;
+}
+.container {
+  max-width: 600px;
+}
+.content {
+  background-color: #121212;
+  color: rgb(233, 233, 233);
+  padding: 25px;
+  box-shadow: 0 4px 8px 0 rgb(0, 0, 0);
+  margin-top: 25px;
+  border-radius: 5px;
+  width: fit-content;
+}
+.main-title {
+  background-color: #1c4f8a;
+  box-shadow: 0 4px 8px 0 rgb(0, 0, 0);
+}
+.main-btn {
+  background-color: rgb(233, 233, 233);
+  color: rgb(14, 13, 13);
+  box-shadow: 0 4px 8px 0 rgb(0, 0, 0);
+  border: none;
+  padding: 6px;
+  font-size: 15px;
+  width: 240px;
+}
+.custom-card {
+  word-wrap: break-word;
+  box-shadow: 0 4px 8px 0 rgb(0, 0, 0);
+  margin: 5px;
+  border: white solid 2px;
+  border-radius: 5px;
+}
+
+.custom-card:hover {
+  box-shadow: 0 8px 16px 0 rgb(0, 0, 0);
+}
+.info {
+  padding: 15px;
+  font-size: 15px;
+}
+.rotate {
+  animation: rotation 26s infinite linear;
+}
+
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}
