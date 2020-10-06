@@ -1,10 +1,10 @@
-# start-reactjs  
-Start ReactJs is a standalone cross-platform desktop GUI software, which automates the process of initializing preconfigured ReactJs project without any hustle.
-<br>
 <p align="center">
-<img src= "docs/images/logo.png" height="130px" width="130px" />
+<img src= "docs/images/logo.png" height="130px" width="130px" /><br>start-reactjs
 </p>
 <br>
+
+## Introduction  
+Start ReactJs is a standalone cross-platform desktop GUI software, which automates the process of initializing preconfigured ReactJs project without any hustle.
 
 ## Need for this application
 This application has been developed to overcome the limitations and disadvantages of well-known app initialization command `npx create-react-app`.
