@@ -1,10 +1,9 @@
 # start-reactjs  
+Start ReactJs is a standalone cross-platform desktop GUI software, which automates the process of initializing preconfigured ReactJs project without any hustle.
 <br>
 <p align="center">
 <img src= "docs/images/logo.png" height="130px" width="130px" />
 </p>
-
-### Start ReactJs is a standalone cross-platform desktop GUI software, which automates the process of initializing preconfigured ReactJs project without any hustle.
 <br>
 
 ## Need for this application
@@ -23,10 +22,10 @@ Hence, general-purpose and lightweight initialization tool is required to create
 2. Your preconfigured React Js project is just a click away.
 3. Fully customizable. The generated project will have config files like .eslintrc, .prettierrc, etc. One only needs to change these configs according to his/her needs if required.
 4. It uses parcel web bundler and also all the scripts are already added in the packge.json file. One only need to hit following commands,
-    * npm run format - It activates the prettier and formates whole source code according to configs specified in .prettierrc file. Which is useful to maintain a uniform coding style while working in a team.
-    * npm run lint - It activates the ESlint and displays the all possible bugs and inconsistency in code according to configs specified in eslintrc file.
-    * npm run -- --fix lint - This command automatically makes code consistency and removes auto fixable bugs.
-    * npm run dev - It starts the development server.
+    * `npm run format` - It activates the prettier and formates whole source code according to configs specified in .prettierrc file. Which is useful to maintain a uniform coding style while working in a team.
+    * `npm run lint` - It activates the ESlint and displays the all possible bugs and inconsistency in code according to configs specified in eslintrc file.
+    * `npm run -- --fix lint` - This command automatically makes code consistency and removes auto fixable bugs.
+    * `npm run dev` - It starts the development server.
   
  ## Installation
  Get the suitable application package from [start-reactjs](https://spzala19.github.io/start-reactjs/)
