@@ -47,6 +47,7 @@ Get the suitable application package from [start-reactjs](https://spzala19.githu
   
 ## Usage
 Enter the project name and description then click on the start button. That's it!
+
 <img src= "docs/images/demo.gif"/>
   
 [View video here](https://youtu.be/osU_6H2AfPQ)
