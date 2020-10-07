@@ -24,7 +24,7 @@ Hence, general-purpose and lightweight initialization tool is required to create
 4. It uses parcel web bundler and also all the scripts are already added in the packge.json file. One only need to hit following commands,
     * `npm run format` - It activates the prettier and formates whole source code according to configs specified in .prettierrc file. Which is useful to maintain a uniform coding style while working in a team.
     * `npm run lint` - It activates the ESlint and displays the all possible bugs and inconsistency in code according to configs specified in eslintrc file.
-    * `npm run -- --fix lint` - This command automatically makes code consistency and removes auto fixable bugs.
+    * `npm run lint -- --fix` - This command automatically makes code consistency and removes auto fixable bugs.
     * `npm run dev` - It starts the development server.
   
  ## Installation
@@ -33,16 +33,19 @@ Hence, general-purpose and lightweight initialization tool is required to create
   #### Installation steps for Windows users
   1. Download the zip from the above link and extract it to your target directory.
   2. Click on 'start-reactjs.exe' and start building cool stuff.
-  image here
+  <img src= "docs/images/winguide.png" height="300px" width="550px"/>
   
   #### Installation steps for Linux users
   1. Download the DEB binary from the above link.
   2. Simply,  double click on that binary file and install it. Once the installation has been completed, the application icon will appear on your start menu.
-  image here
+  <img src= "docs/images/installdeb.png" height="400px" width="450px"/>
   
   ## Usage
   Enter the project name and description then click on the start button. That's it!
-  add gif
+  <img src= "docs/images/demo.gif"/>
+  
+  [View video here](https://youtu.be/osU_6H2AfPQ)
+
   
   ## Contribution guidelines
   Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change. More functionalities can be added.
