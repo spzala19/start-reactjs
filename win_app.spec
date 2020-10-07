@@ -2,7 +2,6 @@
 
 block_cipher = None
 
-
 a = Analysis(['app.py'],
              pathex=['F:/react-setup-automation-master1/react-setup-automation-master'],
              binaries=[],
