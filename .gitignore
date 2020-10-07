@@ -1,3 +1,5 @@
 .vscode/
 app.zip
 __pycache__/
+dist/
+build/
