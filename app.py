@@ -19,7 +19,7 @@ class content:  # holds content to generate config files for react
     # for linux deployment
     #absolutePath = '/usr/share/start-reactjs/'
     # for developement
-    #absolutePath = ''
+    absolutePath = ''
     messages = [
         [
             "Project Name will be used as a project's name (ie. 'my_app') and will be added to package.json",
