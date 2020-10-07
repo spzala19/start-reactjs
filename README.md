@@ -44,7 +44,7 @@ Hence, general-purpose and lightweight initialization tool is required to create
   Enter the project name and description then click on the start button. That's it!
   add gif
   
-  ## Contribution guidlines
+  ## Contribution guidelines
   Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change. More functionalities can be added.
   
     

@@ -17,7 +17,7 @@ import signal
 
 class content:  # holds content to generate config files for react
     # for linux deployment
-    absolutePath = '/usr/share/start-reactjs/'
+    #absolutePath = '/usr/share/start-reactjs/'
     # for developement
     #absolutePath = ''
     messages = [
@@ -89,30 +89,39 @@ class content:  # holds content to generate config files for react
         }
     }
     """
-       #index.html
+    #index.html
     indexHtml = """<html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Document</title>
-        <link rel="stylesheet/css" href="style.css" />
-    </head>
-    <body>
-        <div id="root">content not rendered</div>
-        <script src="./App.js"></script>
-    </body>
-    </html>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet/css" href="style.css" />
+</head>
+<body>
+    <div id="root">content not rendered</div>
+    <script src="./App.js"></script>
+</body>
+</html>
     """
     #App.js
-    appJs = """
-    import React from 'react';
-    import ReactDOM from 'react-dom';
-    const App = () => (
-    <div>
-        <p>Congratulation!! Your ReactJs app is working! Start building awesome stuff!</p>
-    </div>
-    );
-    ReactDOM.render(<App />, document.getElementById('root'));
+    appJs = """import React from 'react';
+import ReactDOM from 'react-dom';
+
+const App = () => (
+  <div>
+    <p>
+      Congratulation!! Your ReactJs app is working! Start building awesome
+      stuff!
+    </p>
+    <p>
+      <a href="https://github.com/spzala19/start-reactjs">
+        visit for more info
+      </a>
+    </p>
+  </div>
+);
+ReactDOM.render(<App />, document.getElementById('root'));
+
     """
     #style.css
     styleCss = ''
@@ -417,7 +426,7 @@ class widgets:
                              mode="determinate",
                              takefocus=True,
                              maximum=100)
-        self.p.grid(row=1, column=0, sticky="E", padx=40, pady=5,ipady=0)
+        self.p.grid(row=1, column=0, sticky="E", padx=40, pady=5, ipady=0)
 
     def createConsole(self):  #console creation
 
@@ -595,7 +604,7 @@ class widgets:
                                   column=0,
                                   sticky=tk.W + tk.N,
                                   padx=50,
-                                  pady=13)        
+                                  pady=13)
         Label(self.contentFrame3,
               text=f"Project Directory : {self.path}",
               background="#262625",
@@ -630,7 +639,7 @@ class widgets:
                 padx=20,
             )
         Label(self.contentFrame3,
-              text="npm run -- --fix lint",
+              text="npm run lint -- --fix",
               background="#1a1919",
               foreground="#68D9B5",
               width=72,
@@ -693,7 +702,7 @@ class widgets:
                                      row=10,
                                      column=0,
                                      sticky=tk.W,
-                                     pady=15,
+                                     pady=10,
                                      padx=280)
 
     def close(self):  #warning
